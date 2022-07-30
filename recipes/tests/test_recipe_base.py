@@ -1,0 +1,31 @@
+from django.test import TestCase
+from django.urls import resolve, reverse
+from recipes import views
+from recipes.models import Category, Recipe, User
+
+
+class RecipeTestBase(TestCase):
+    def setUp(self) -> None:
+        category = Category.objects.create(name='Category')
+        author = User.objects.create(
+            first_name='user',
+            last_name='name',
+            username='username',
+            password='123456',
+            email='username@email.com',
+        )
+        recipe = Recipe.objects.create(
+            category=category,
+            author=author,
+            title = 'Recipe Title',
+            description = 'Recipe description',
+            slug = 'recipe-slug',
+            preparation_time = 10,
+            preparation_time_unit = 'Minutos',
+            servings = 5,
+            servings_unit = 'Porções',
+            preparation_step = 'Recipe Preparation Steps',
+            preparation_step_is_html = False,
+            is_published = True,
+        )
+        return super().setUp()
