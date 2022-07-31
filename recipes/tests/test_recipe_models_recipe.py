@@ -1,4 +1,5 @@
 from django.forms import ValidationError
+from parameterized import parameterized
 
 from .test_recipe_base import RecipeTestBase
 
@@ -12,5 +13,16 @@ class RecipeModelTest(RecipeTestBase):
         self.recipe.title = 'b' * 66
 
         with self.assertRaises(ValidationError):
-            self.recipe.full_clean() # AQUI A VALIDAÇÃO OCORRE
+            self.recipe.full_clean() # AQ UI A VALIDAÇÃO OCORRE
 
+    @parameterized.expand([
+            ('title', 65),
+            ('description', 165),
+            ('preparation_time_unit', 65),
+            ('servings_unit', 65),
+        ])
+    def test_recipe_field_max_length(self, field, max_length):
+
+        setattr(self.recipe, field, (max_length + 0))
+        with self.assertRaises(ValidationError):
+            self.recipe.full_clean() 
