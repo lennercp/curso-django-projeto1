@@ -36,6 +36,13 @@ class RecipeViewsTest(RecipeTestBase):
         self.assertIn('Recipe Title', content)
         self.assertEqual(len(response_context_recipes), 1)
 
+    def test_recipe_home_template_dont_load_recipes_not_published(self):
+        self.make_recipe(is_published=False)
+        
+        response = self.client.get(reverse('recipes:home'))
+
+        self.assertIn('Sem receitas', response.content.decode('utf-8'))
+
     #CATEGORY
 
     def test_recipe_category_view_function_is_correct(self):
@@ -48,7 +55,7 @@ class RecipeViewsTest(RecipeTestBase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_recipe_home_category_loads_recipes(self):
+    def test_recipe_category_loads_recipes(self):
         needed_title = 'This is a category page'
         self.make_recipe(title=needed_title)
         
@@ -57,6 +64,13 @@ class RecipeViewsTest(RecipeTestBase):
         response_context_recipes = response.context['recipes']
 
         self.assertIn(needed_title, content)
+
+    def test_recipe_category_template_dont_load_recipes_not_published(self):
+        recipe = self.make_recipe(is_published=False)
+        
+        response = self.client.get(reverse('recipes:category', kwargs={'category_id': recipe.category.id}))
+
+        self.assertEqual(response.status_code, 404)
 
     #RECIPE DETAIL
 
@@ -78,4 +92,11 @@ class RecipeViewsTest(RecipeTestBase):
         content = response.content.decode('utf-8')
 
         self.assertIn(needed_title, content)
+
+    def test_recipe_detail_template_dont_load_recipe_not_published(self):
+        recipe = self.make_recipe(is_published=False)
+        
+        response = self.client.get(reverse('recipes:recipe', kwargs={'id': recipe.id}))
+
+        self.assertEqual(response.status_code, 404)
     
