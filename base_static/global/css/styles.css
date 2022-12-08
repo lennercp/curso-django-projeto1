@@ -347,6 +347,19 @@ h6 {
     background: var(--color-primary-dark);
     color: var(--color-white);
 }
+.inline-form {
+    display: inline;
+    font-size: 1.6rem;
+}
+
+.plaintext-button {
+    font-size: 1.6rem;
+    display: inline;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-primary);
+}
 /* Messages */
 .messages-container {
     display: flex;
